@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include ../components/head %>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+<body>
+  <section id="container">
+
+    <!--header start-->
+    <% include ../components/header %>
+    <!--header end-->
+    <!--sidebar start-->
+    <% include ../components/sidebar %>
+    <!--sidebar end-->
+    <!--main content start-->
+    <section id="main-content">
+      <section class="wrapper">
+        <!-- row -->
+        <div class="row mt">
+          <div class="col-md-12">
+            <div class="content-panel" id="accordion">
+              <%  if(chats && chats.length > 0){ %>
+              <% for (let chat of chats){ %>
+              <h3><%= chat.user.name %></h3>
+              <div class="content" style="max-height:500px overflow-y:scroll">
+                <% for (let item of chat.items){   %>
+                <div class="group-rom ">
+                  <div class="first-part odd"><%= item.User.name %></div>
+                  <% if(item.message){ %>
+                  <div class="second-part"><%= item.message %></div>
+                  <% } %>
+                  <% if(item.file){ %>
+                  <div class="second-part"><a href="<%= item.file %>"><%= item.file %></a></div>
+                  <% } %>
+                  <div class="third-part"><%= item.createdAt %></div>
+                </div>
+                <% } %>
+              </div>
+              <% } %>
+              <% } else { %>
+              no data
+              <% }  %>
+            </div>
+            <!-- /content-panel -->
+          </div>
+          <!-- /col-md-12 -->
+        </div>
+        <!-- /row -->
+      </section>
+    </section>
+    <!--main content end-->
+
+  </section>
+  <script type="text/javascript">
+    $('#accordion').accordion({
+      collapsible: true,
+      autoHeight: true,
+      clearStyle: true,
+    });
+  </script>
+
+</body>
+
+</html>

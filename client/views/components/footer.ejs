@@ -1,0 +1,89 @@
+  <% if(user !== undefined){ %>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+  <script type="text/javascript" src="/client.js"></script>
+  <script type="text/javascript">
+    < %
+    if (room != undefined) {
+      % >
+      var socket = io.connect();
+      var uploader = new SocketIOFileUpload(socket);
+      uploader.listenOnSubmit(document.getElementById("send-message"), document.getElementById("files"));
+      // on connection to server, ask for user's name with an anonymous callback
+      socket.emit('join', '<%= room %>');
+      // Do something when a file is uploaded:
+      uploader.addEventListener("complete", function(event) {
+        console.log(event.success);
+        console.log(event.file);
+        socket.emit('sendchat', {
+          file: event.file.name,
+          senderId: < %= user.id % >
+        });
+      });
+      // listener, whenever the server emits 'updatechat', this updates the chat body
+      socket.on('updatechat', function(data) {
+
+        $('.chat-room .mid-side #conversation .group-rom').removeClass('last-group')
+        if (data.message) {
+          $('.chat-room .mid-side #conversation').append(`
+            <div class="group-rom last-group">
+              <div class="first-part odd">${data.username}</div>
+              <div class="second-part">${data.message}</div>
+              <div class="third-part">${data.date}</div>
+            </div>
+            `);
+        }
+        if (data.file) {
+
+          $('.chat-room .mid-side #conversation').append(`
+            <div class="group-rom last-group">
+              <div class="first-part odd">${data.username}</div>
+              <div class="second-part"><a href="${data.file}" >${data.file}</a></div>
+              <div class="third-part">${data.date}</div>
+            </div>
+            `);
+        }
+
+      });
+      // listener, whenever the server emits 'updaterooms', this updates the room the client is in
+      socket.on('updaterooms', function(rooms, current_room) {
+        $('#rooms').empty();
+        $.each(rooms, function(key, value) {
+          if (value == current_room) {
+            $('#rooms').append('<div>' + value + '</div>');
+          } else {
+            $('#rooms').append('<div><a href="#" onclick="switchRoom(\'' + value + '\')">' + value + '</a></div>');
+          }
+        });
+      });
+
+      function switchRoom(room) {
+        socket.emit('switchRoom', room);
+      }
+
+      // on load of page
+      $(function() {
+        // when the client clicks SEND
+        $('#send-message').click(function() {
+          var message = $('#message-field').val();
+          $('#message-field').val('');
+          // tell server to execute 'sendchat' and send along one parameter
+          socket.emit('sendchat', {
+            message: message,
+            senderId: < %= user.id % >
+          });
+        });
+
+        // when the client hits ENTER on their keyboard
+        $('#data').keypress(function(e) {
+          if (e.which == 13) {
+            $(this).blur();
+            $('#datasend').focus().click();
+          }
+        });
+      }); <
+      %
+    } % >
+  </script>
+  <% } %>
+
+  <!--footer end-->

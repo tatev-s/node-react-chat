@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include ../components/head %>
+
+</head>
+
+<body>
+  <section id="container">
+
+    <!--header start-->
+    <% include ../components/header %>
+    <!--header end-->
+    <!--sidebar start-->
+    <% include ../components/sidebar %>
+    <!--sidebar end-->
+    <!--main content start-->
+    <section id="main-content">
+      <section class="wrapper">
+        <!-- row -->
+        <div class="chat-room mt ds">
+          <aside class="">
+            <div class="invite-row">
+              <h4 class="pull-left">Active Chats </h4>
+            </div>
+            <% if(chats && chats.length >0){ %>
+            <% for(let chat of chats){ %>
+            <div class="desc">
+              <div class="thumb">
+                <img class="img-circle" src="img/ui-divya.jpg" width="35px" height="35px" align="">
+              </div>
+              <div class="details">
+                <p>
+                  <a href="/chats/messages/<%= chat.id %>">
+                    <% if(user.isAdmin){ %>
+                    <%= chat.userData.name %>
+                    <% } else { %>
+                    <%= chat.adminData.name %>
+                    <% } %>
+                  </a><br>
+                  <muted><% chat.updatedAt %></muted>
+                </p>
+              </div>
+            </div>
+            <% } %>
+            <% } else { %>
+            <p>No chats found</p>
+            <% } %>
+          </aside>
+        </div>
+        <!-- /row -->
+      </section>
+    </section>
+    <!--main content end-->
+
+  </section>
+
+</body>
+
+</html>
