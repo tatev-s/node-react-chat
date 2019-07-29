@@ -26,7 +26,7 @@ module.exports = {
       },
       deleted: {
         type: Sequelize.BOOLEAN,
-        default: false
+        defaultValue: false
       },
       createdAt: {
         allowNull: false,

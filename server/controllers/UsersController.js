@@ -80,7 +80,7 @@ class UsersController extends AppController {
       validationErrors: {}
     };
     if (req.method == 'GET') {
-      return this.renderView(req, res, '/users/signup', locals);
+      return this.renderView(req, res, 'users/signup', locals);
     }
     const bodyParams = req.body;
     const {
@@ -99,12 +99,12 @@ class UsersController extends AppController {
         isAdmin
       })
       .then(userData => {
-        return this.renderView(req, res, '/users/signup-success', locals);
+        return this.renderView(req, res, 'users/signup-success', locals);
       })
       .catch((error, data) => {
         locals.validationErrors = this.customizeErrorsObject(error);
         locals.formData = bodyParams;
-        return this.renderView(req, res, '/users/signup', locals);
+        return this.renderView(req, res, 'users/signup', locals);
       });
   }
 }

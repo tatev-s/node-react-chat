@@ -2,14 +2,14 @@
   "development": {
     "username": "tatev",
     "password": "q1w2e3r4",
-    "database": "innosoft",
+    "database": "simplechat",
     "host": "localhost",
     "dialect": "postgres"
   },
   "production": {
     "username": "tatev",
     "password": "q1w2e3r4",
-    "database": "innosoft",
+    "database": "simplechat",
     "host": "localhost",
     "dialect": "postgres"
   }
