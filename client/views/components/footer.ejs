@@ -2,9 +2,7 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
   <script type="text/javascript" src="/client.js"></script>
   <script type="text/javascript">
-    < %
-    if (room != undefined) {
-      % >
+    <% if (room != undefined) { %>
       var socket = io.connect();
       var uploader = new SocketIOFileUpload(socket);
       uploader.listenOnSubmit(document.getElementById("send-message"), document.getElementById("files"));
@@ -16,7 +14,7 @@
         console.log(event.file);
         socket.emit('sendchat', {
           file: event.file.name,
-          senderId: < %= user.id % >
+          senderId: <%= user.id %>
         });
       });
       // listener, whenever the server emits 'updatechat', this updates the chat body
@@ -69,7 +67,7 @@
           // tell server to execute 'sendchat' and send along one parameter
           socket.emit('sendchat', {
             message: message,
-            senderId: < %= user.id % >
+            senderId: <%= user.id %>
           });
         });
 
@@ -80,9 +78,8 @@
             $('#datasend').focus().click();
           }
         });
-      }); <
-      %
-    } % >
+      }); <%
+    } %>
   </script>
   <% } %>
 

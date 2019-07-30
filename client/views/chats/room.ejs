@@ -31,18 +31,18 @@
     overflow-y: scroll;
     max-height: 600px;">
               <% if(chat.items && chat.items.length >0 ){ %>
-              <% var i = 0; for (let item of chat.items){  i= i+1; %>
-              <div class="group-rom <% if(i == chat.items.length){ %> last-group <% } %> ">
-                <div class="first-part odd"><%= item.User.name %></div>
-                <% if(item.message){ %>
-                <div class="second-part"><%= item.message %></div>
+                <% var i = 0; for (let item of chat.items){  i= i+1; %>
+                <div class="group-rom <% if(i == chat.items.length){ %> last-group <% } %> ">
+                  <div class="first-part odd"><%= item.User.name %></div>
+                  <% if(item.message){ %>
+                  <div class="second-part"><%= item.message %></div>
+                  <% } %>
+                  <% if(item.file){ %>
+                  <div class="second-part"><a href="<%= item.file %>"><%= item.file %></a></div>
+                  <% } %>
+                  <div class="third-part"><%= item.createdAt %></div>
+                </div>
                 <% } %>
-                <% if(item.file){ %>
-                <div class="second-part"><a href="<%= item.file %>"><%= item.file %></a></div>
-                <% } %>
-                <div class="third-part"><%= item.createdAt %></div>
-              </div>
-              <% } %>
               <% } %>
             </div>
 

@@ -83,7 +83,7 @@ class ChatsController extends AppController {
     ChatService.chatWithMessagesAndFiles(req.params.chatid, req.user.id)
       .then((chat) => {
         if (req.user.id == chat.adminId || req.user.id == chat.userId) {
-          templateData.chat = chat
+          templateData.chat = chat;
           return this.renderView(req, res, 'chats/room', templateData);
         }
         return res.redirect('/dashboard');

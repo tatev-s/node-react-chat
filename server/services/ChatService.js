@@ -89,14 +89,12 @@ class ChatService {
           },
           {
             model: User,
-            where: {deleted: false},
             required: true,
             as: 'userData',
             attributes: ['name', 'id']
           },
           {
             model: User,
-            where: {deleted: false},
             required: true,
             as: 'adminData',
             attributes: ['name', 'id']
