@@ -1,4 +1,4 @@
-Node Js, Socket.io, PostgreSQL simple chat
+Node Js, React.Js, Socket.io, simple chat
 
 DIRECTORY STRUCTURE
 -------------------
@@ -7,9 +7,9 @@ DIRECTORY STRUCTURE
       server/                    contains server components
       server/config/             contains server configurations
       server/controllers/        contains Web controller classes
-      server/helpers/            contains passport authentication and socket.io connection
+      server/helpers/            contains jwt verification, error handler and socket.io connection
       server/migrations/         contains sequelize migrations
-      server/models/             contains models of database tables
+      server/models/             contains models
       server/routes/             contains router
       server/services            contains service files for models
 
@@ -19,8 +19,14 @@ INSTALLATION
 
 ### Install via NPM
 
+~~~
+cd client
+npm install
+npm start
+~~~
 
 ~~~
+cd server
 npm install
 ~~~
 
@@ -57,6 +63,7 @@ Run application
 ~~~
 npm run dev-start
 ~~~
+
 
 ```
 
