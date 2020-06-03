@@ -3,39 +3,32 @@ import bcrypt from "bcrypt";
 import moment from "moment";
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
-    name: {
-      type:DataTypes.STRING,
-      allowNull: false,
-      notEmpty:true,
-      validate: {
-        notNull: {
-          msg: 'Please enter your name'
-        },
-        notEmpty: {
-          msg: 'Please enter your name'
-        }
-      }
-    },
-    email: {
+    username: {
       type:DataTypes.STRING,
       allowNull: false,
       notEmpty:true,
       unique: {
-          args: true,
-          msg: 'Email address already in use!'
+        args: true,
+        msg: 'Username already in use!'
       },
       validate: {
         notNull: {
-          msg: 'Please enter your email'
+          msg: 'Please enter username'
         },
         notEmpty: {
-          msg: 'Please enter your email'
+          msg: 'Please enter username'
         },
-        isEmail: {
-          args: true,
-          msg: 'Please enter a valid email address'
+        len: {
+          args: [6,40],
+          msg: "Username must be at least 6 characters and less than 40 characters. "
         },
-      },
+        is: {
+          args: /^[A-Za-z][A-Za-z0-9-]+$/i, 
+          msg: 'Username must start with a letter and  have no spaces and symbols.'
+        },
+        
+     
+      }
     },
     password: {
       type: DataTypes.STRING,
@@ -74,36 +67,16 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
     },
-    isAdmin: DataTypes.BOOLEAN,
+    lastLogin: DataTypes.DATE,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
   }, {});
   User.associate = function(models) {
-      User.hasMany(models.Chats, {
-        foreignKey: {
-          name: 'userId',
-          allowNull: false
-        },
-        as: "userchats"
-      });
-      User.hasMany(models.Chats, {
-          foreignKey: {
-            name: 'adminId',
-            allowNull: false
-          },
-          as: "adminchats"
-        });
       User.hasMany(models.Messages, {
           foreignKey: {
-            name: 'senderId'
+            name: 'userId'
           },
           as: "messages"
-        });
-      User.hasMany(models.Files, {
-          foreignKey: {
-            name: 'senderId'
-          },
-          as: "files"
         });
   };
   User.prototype.validPassword =  function(value) {
@@ -116,14 +89,6 @@ module.exports = (sequelize, DataTypes) => {
   	user.password =  bcrypt.hashSync(user.get('password'), 10);
   };
   User.beforeCreate(function(user, options, callback) {
-  	user.email = user.email.toLowerCase();
-  	if (user.password)
-  		hasSecurePassword(user, options, callback);
-  	else
-  		return callback(null, options);
-  })
-  User.beforeUpdate(function(user, options, callback) {
-  	user.email = user.email.toLowerCase();
   	if (user.password)
   		hasSecurePassword(user, options, callback);
   	else

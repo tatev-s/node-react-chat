@@ -2,11 +2,18 @@
 import moment from "moment";
 module.exports = (sequelize, DataTypes) => {
   const Messages = sequelize.define('Messages', {
-    chatId: DataTypes.INTEGER,
-    senderId: DataTypes.INTEGER,
-    message: DataTypes.TEXT,
-    deleted: DataTypes.BOOLEAN,
-    isRead: DataTypes.BOOLEAN,
+    userId: DataTypes.INTEGER,
+    message: {
+        type:DataTypes.TEXT,
+        allowNull: false,
+        notEmpty:true,
+        notNull: {
+          msg: 'Message can not be null'
+        },
+        notEmpty: {
+          msg: 'Message can not be empty'
+        },
+    },
     createdAt: {
       type: DataTypes.DATE,
       get() {
@@ -21,15 +28,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
   Messages.associate = function(models) {
-    Messages.belongsTo(models.Chats, {
-      foreignKey: 'id',
-      onDelete: 'CASCADE'
-    });
     Messages.belongsTo(models.User, {
-      foreignKey: 'senderId',
+      foreignKey: 'userId',
       onDelete: 'CASCADE',
-
-    });
+      as: "user"
+    },)
   };
   return Messages;
 };

@@ -1,16 +1,16 @@
 {
   "development": {
-    "username": "tatev",
+    "username": "root",
     "password": "q1w2e3r4",
-    "database": "simplechat",
+    "database": "published_application",
     "host": "localhost",
-    "dialect": "postgres"
+    "dialect": "mysql"
   },
   "production": {
-    "username": "tatev",
+    "username": "root",
     "password": "q1w2e3r4",
-    "database": "simplechat",
+    "database": "published_application",
     "host": "localhost",
-    "dialect": "postgres"
+    "dialect": "mysql"
   }
 }

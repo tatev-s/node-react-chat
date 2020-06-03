@@ -1,52 +1,66 @@
-import MessageService from '../services/MessageService';
-import FilesService from '../services/FilesService';
-import UserService from '../services/UserService';
-import siofu from "socketio-file-upload";
 
-module.exports = (server) => {
-  var io = require('socket.io')(server);
-  siofu.listen(server);
-  io.sockets.on('connection', function(socket) {
-    var uploader = new siofu();
-    uploader.dir = `${__dirname}/../../client/assets/uploads/`;
-    uploader.listen(socket);
-    socket.on('join', function(channel, ack) {
-      socket.room = channel;
-      socket.join(channel);
-    });
-    // Error handler:
-    uploader.on("error", function(event) {
-      console.log("Error from uploader", event);
-    });
-    // when the client emits 'sendchat', this listens and executes
-    socket.on('sendchat', function(data) {
-      if (data.senderId) {
-        if (data.message) {
-          MessageService.insertMessage({
-            message: data.message,
-            senderId: data.senderId,
-            chatId: socket.room
-          });
-        }
-        if (data.file) {
-          FilesService.insertFile({
-            file: `/uploads/${data.file}`,
-            senderId: data.senderId,
-            chatId: socket.room
-          });
-          data.file = `/uploads/${data.file}`;
-        }
-        UserService.getById(data.senderId).then(user => {
-          data.date = new Date();
-          data.username = user.name;
-          io.sockets.in(socket.room).emit('updatechat', data);
-        })
-      }
-    });
-    // when the user disconnects.. perform this
-    socket.on('disconnect', function() {
-      socket.leave(socket.room);
-    });
-  });
-
+import jwt from 'jsonwebtoken';
+//import MessagesService from '../services/MessageService'
+const io = require('socket.io')
+const ChatServer = {
+    init(app){
+        this.socketio = io(app, {
+            path: '/publish',
+            forceNew: true,
+        });
+        this.socketio
+          .use(function(socket, next){
+            if (socket.handshake.query && socket.handshake.query.token){ //ACCESS_TOKEN_SECRET
+              jwt.verify(socket.handshake.query.token, process.env.ACCESS_TOKEN_SECRET, function(err, decoded) {
+                if(err) return next(new Error('Authentication error'));
+                socket.decoded = decoded;
+                next();
+              });
+            } else {
+                next(new Error('Authentication error'));
+            }    
+          })
+          .on('connection', (socket) => {
+            //   socket.on('message', function(data) {
+            //     const {sub} = socket.decoded;
+            //     const {message} = data;
+            //     if(message ){
+            //       MessagesService.create({
+            //           message, 
+            //           userId: sub})
+            //       .then( inserted=>{
+            //           MessagesService.getByid(inserted.id)
+            //             .then(message=>{
+            //               console.log('message',message)
+            //               socketio.sockets.emit('message', message); 
+            //             })
+            //             .catch(error=>{
+            //               next(error);
+            //             })
+                    
+            //       })
+            //       .catch(error=>{
+            //         console.log('errpr',error)
+            //         socket.emit('error', "Wrong parameter: Missing message");
+            //       })
+            //   }else{
+            //     socket.emit('error', "Wrong parameter: Missing message");
+            //   }
+                  
+            // });
+            // when the user disconnects.. perform this
+            socket.on('disconnect', function(socket) {
+              console.log('disconnected socket',socket.id)
+            });
+          })
+          return this
+    },
+    share(message){
+      this.socketio.sockets.emit('message', message); 
+    }
 }
+
+export default ChatServer
+
+
+

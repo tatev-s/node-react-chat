@@ -1,0 +1,34 @@
+
+  table, td, th {  
+    border: 1px solid #555;
+    text-align: left;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+    max-height: 500px;
+  }
+
+ th {
+    text-align: center;
+ }
+  th, td {
+    word-break: break-all;      
+    overflow-wrap: break-word;
+    padding: 15px;
+  }
+  .field-wrap #chat-input{
+    width: 100%;
+  }
+  .wrap-box{
+    display: inline-block;
+    width: 69%;
+    float: left;
+  }
+  .field-wrap{
+    display: inline-block;
+    float: left;
+    margin-left: 1%;
+}
